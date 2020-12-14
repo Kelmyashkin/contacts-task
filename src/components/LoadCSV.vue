@@ -3,7 +3,6 @@
     <h1>Load a CSV file</h1>
     <input ref="csv" type="file" name="csv" @change.prevent="loadfile" />
 
-    <p>{{ mapFields }}</p>
     <ul v-if="columns.length">
       <li v-for="field in mapFields" :key="field.key">
         {{ field.key }}
@@ -20,9 +19,6 @@
     </ul>
 
     <button :disabled="!allColumnsMapped" @click="loadContacts">Load</button>
-    <!-- <VueCsvImport v-model="parseCsv" :map-fields="mapFields"></VueCsvImport> -->
-
-    <p>{{ parseCsv }}</p>
   </div>
 </template>
 
@@ -35,6 +31,7 @@ import Papa from "papaparse";
 import mimeTypes from "mime-types";
 import { Contact } from "@/interfaces/Contact";
 import { ContactCustomAttributes } from "@/interfaces/ContactCustomAttributes";
+import { generateId } from "@/utils/commonUtils";
 
 interface FileMapping {
   key: string;
@@ -44,23 +41,25 @@ interface FileMapping {
 
 @Component
 export default class LoadCSV extends Vue {
-  parseCsv: any = [];
   mapFields: FileMapping[] = [
     { key: "name", label: "Name" },
     { key: "phone", label: "Phone" },
     { key: "email", label: "Email" },
   ];
-  mappings: number[] = [];
   columns: string[] = [];
   rows: string[][] = [];
 
+  $refs!: {
+    csv: any;
+  };
+
   get allColumnsMapped() {
-    return true; // this.mapFields.every((f) => f.mapPlace !== undefined);
+    return this.mapFields.every((f) => f.mapPlace !== undefined);
   }
 
   loadfile() {
     console.log("loadfile");
-    const file = (this.$refs.csv as any).files[0];
+    const file = this.$refs.csv?.files[0];
     const mimeType = file.type === "" ? mimeTypes.lookup(file.name) : file.type;
 
     if (file) {
@@ -108,7 +107,7 @@ export default class LoadCSV extends Vue {
       this.mapFields.find((m) => m.key === "email")?.mapPlace || 0;
     const mappedIndexes = [namePlace, phonePlace, emailPlace];
     const contacts = this.rows.map((r, index) => ({
-      id: index,
+      id: generateId("contact"),
       name: r[namePlace],
       phone: r[phonePlace],
       email: r[emailPlace],
@@ -121,7 +120,8 @@ export default class LoadCSV extends Vue {
             mappedIndexes.includes(fIndex)
               ? null
               : ({
-                  ["contact_id"]: index,
+                  id: generateId("custom_attribute"),
+                  ["contact_id"]: contacts[index].id,
                   key: this.columns[fIndex],
                   value: field,
                 } as ContactCustomAttributes)
@@ -132,6 +132,15 @@ export default class LoadCSV extends Vue {
     console.log("contacts", contacts);
     console.log("customAttributes", customAttributes);
     this.$emit("on-mapped-data", contacts, customAttributes);
+
+    this.clearFileChoose();
+  }
+
+  clearFileChoose() {
+    if (this.$refs.csv) this.$refs.csv.value = "";
+    this.rows = [];
+    this.columns = [];
+    this.mapFields.forEach((mf) => (mf.mapPlace = undefined));
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="table">
+  <div class="table" v-if="contacts.length">
     <h2>Contacts</h2>
     <table>
       <tr>
@@ -26,21 +26,23 @@
 
     <hr />
 
-    <h2>Custom Attributes</h2>
-    <table>
-      <tr>
-        <th>Id</th>
-        <th>Contact Id</th>
-        <th>Key</th>
-        <th>Value</th>
-      </tr>
-      <tr v-for="c in attributes" :key="c.id">
-        <td>{{ c.id }}</td>
-        <td>{{ c.contact_id }}</td>
-        <td>{{ c.key }}</td>
-        <td>{{ c.value }}</td>
-      </tr>
-    </table>
+    <div v-if="attributes.length">
+      <h2>Custom Attributes</h2>
+      <table>
+        <tr>
+          <th>Id</th>
+          <th>Contact Id</th>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+        <tr v-for="c in attributes" :key="c.id">
+          <td>{{ c.id }}</td>
+          <td>{{ c.contact_id }}</td>
+          <td>{{ c.key }}</td>
+          <td>{{ c.value }}</td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
