@@ -1,20 +1,38 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <LoadCSV @on-mapped-data="setContacts" />
+    <ContactsTable
+      :contacts="contacts"
+      :attributes="customAttributes"
+    ></ContactsTable>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "./components/HelloWorld.vue";
+import LoadCSV from "./components/LoadCSV.vue";
+import ContactsTable from "./components/ContactsTable.vue";
+
+import { Contact } from "./interfaces/Contact";
+import { ContactCustomAttributes } from "./interfaces/ContactCustomAttributes";
 
 @Component({
   components: {
-    HelloWorld
-  }
+    LoadCSV,
+    ContactsTable,
+  },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  contacts: Contact[] = [];
+  customAttributes: ContactCustomAttributes[] = [];
+
+  setContacts(contacts: Contact[], attributes: ContactCustomAttributes[]) {
+    console.log("App", contacts, attributes);
+
+    contacts.forEach((c) => this.contacts.push(c));
+    attributes.forEach((c) => this.customAttributes.push(c));
+  }
+}
 </script>
 
 <style>
