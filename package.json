@@ -10,6 +10,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "bootstrap": "^4.5.3",
+    "bootstrap-vue": "^2.21.0",
     "core-js": "^3.6.5",
     "lodash": "^4.17.20",
     "mime-types": "^2.1.27",
