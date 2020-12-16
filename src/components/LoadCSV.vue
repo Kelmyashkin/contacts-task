@@ -2,6 +2,7 @@
   <div>
     <h1>Load a CSV file</h1>
     <b-form-file
+      id="csvFile"
       class="w-50 my-3"
       v-model="csvFile"
       :state="Boolean(csvFile)"
@@ -10,7 +11,7 @@
       accept=".csv"
     ></b-form-file>
 
-    <b-container class="my-3 ">
+    <b-container id="mappingPanel" class="my-3">
       <b-row>
         <b-col class="cols-2">
           <b-list-group v-if="columns.length">
@@ -31,9 +32,11 @@
     </b-container>
 
     <b-button
+      id="loadButton"
       :disabled="!allColumnsMapped"
       @click="loadContacts"
       variant="outline-success"
+      v-if="columns.length"
       >Load</b-button
     >
   </div>
