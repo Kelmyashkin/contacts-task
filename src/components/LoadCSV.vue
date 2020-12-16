@@ -104,6 +104,14 @@ export default class LoadCSV extends Vue {
         const result = Papa.parse(output, { skipEmptyLines: true });
         this.columns = result.data[0] as string[];
         this.rows = result.data.slice(1) as string[][];
+
+        // matching
+        this.mapFields.forEach((f) => {
+          const matchedColumn = this.columns.find((c) => c.includes(f.key));
+          if (matchedColumn) {
+            f.mapPlace = this.columns.indexOf(matchedColumn);
+          }
+        });
       });
     }
   }
