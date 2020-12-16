@@ -1,15 +1,19 @@
 <template>
-  <div v-if="contacts.length">
+  <div id="tables-root" v-if="contacts && contacts.length">
     <b-container fluid>
       <b-row>
         <b-col class="p-2 col-lg-7 col-sm-12">
           <h2>Contacts</h2>
-          <b-table striped :items="contacts"></b-table>
+          <b-table id="contacts-table" striped :items="contacts"></b-table>
         </b-col>
         <b-col class="p-2 col-lg-5 col-sm-12">
-          <div v-if="attributes.length">
+          <div v-if="attributes && attributes.length">
             <h2>Custom Attributes</h2>
-            <b-table striped :items="attributes"></b-table>
+            <b-table
+              id="attributes-table"
+              striped
+              :items="attributes"
+            ></b-table>
           </div>
         </b-col>
       </b-row>

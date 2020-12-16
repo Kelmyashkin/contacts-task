@@ -4,7 +4,7 @@ export interface Contact {
   name: string;
   phone: string;
   email: string;
-  sticky_phone_number_id: number;
-  created_at: Date;
-  updated_at: Date;
+  sticky_phone_number_id?: number;
+  created_at?: Date;
+  updated_at?: Date;
 }
