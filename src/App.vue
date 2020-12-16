@@ -33,8 +33,6 @@ export default class App extends Vue {
   customAttributes: ContactCustomAttributes[] = [];
 
   setContacts(contacts: Contact[], attributes: ContactCustomAttributes[]) {
-    console.log("App", contacts, attributes);
-
     contacts.forEach((c) => this.contacts.push(c));
     attributes.forEach((c) => this.customAttributes.push(c));
   }

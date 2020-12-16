@@ -158,8 +158,7 @@ export default class LoadCSV extends Vue {
           .filter((f) => f)
       )
     );
-    console.log("contacts", contacts);
-    console.log("customAttributes", customAttributes);
+
     this.$emit("on-mapped-data", contacts, customAttributes);
 
     this.clearFileChoose();
