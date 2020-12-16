@@ -1,10 +1,16 @@
 <template>
   <div id="app">
-    <LoadCSV @on-mapped-data="setContacts" />
-    <ContactsTable
-      :contacts="contacts"
-      :attributes="customAttributes"
-    ></ContactsTable>
+    <b-navbar toggleable="lg" type="dark" variant="info">
+      <b-navbar-brand href="#">CSV Field Import Mapper</b-navbar-brand>
+    </b-navbar>
+
+    <b-container fluid class="p-4">
+      <LoadCSV @on-mapped-data="setContacts" />
+      <ContactsTable
+        :contacts="contacts"
+        :attributes="customAttributes"
+      ></ContactsTable>
+    </b-container>
   </div>
 </template>
 
@@ -42,6 +48,5 @@ export default class App extends Vue {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

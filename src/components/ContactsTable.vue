@@ -1,48 +1,19 @@
 <template>
-  <div class="table" v-if="contacts.length">
-    <h2>Contacts</h2>
-    <table>
-      <tr>
-        <th>Id</th>
-        <th>Team Id</th>
-        <th>Name</th>
-        <th>Phone</th>
-        <th>Email</th>
-        <th>Sticky Phone</th>
-        <th>Created At</th>
-        <th>Updated At</th>
-      </tr>
-      <tr v-for="c in contacts" :key="c.id">
-        <td>{{ c.id }}</td>
-        <td>{{ c.team_id }}</td>
-        <td>{{ c.name }}</td>
-        <td>{{ c.phone }}</td>
-        <td>{{ c.email }}</td>
-        <td>{{ c.sticky_phone_number_id }}</td>
-        <td>{{ c.created_at }}</td>
-        <td>{{ c.updated_at }}</td>
-      </tr>
-    </table>
-
-    <hr />
-
-    <div v-if="attributes.length">
-      <h2>Custom Attributes</h2>
-      <table>
-        <tr>
-          <th>Id</th>
-          <th>Contact Id</th>
-          <th>Key</th>
-          <th>Value</th>
-        </tr>
-        <tr v-for="c in attributes" :key="c.id">
-          <td>{{ c.id }}</td>
-          <td>{{ c.contact_id }}</td>
-          <td>{{ c.key }}</td>
-          <td>{{ c.value }}</td>
-        </tr>
-      </table>
-    </div>
+  <div v-if="contacts.length">
+    <b-container fluid>
+      <b-row>
+        <b-col class="p-2 col-lg-7 col-sm-12">
+          <h2>Contacts</h2>
+          <b-table striped :items="contacts"></b-table>
+        </b-col>
+        <b-col class="p-2 col-lg-5 col-sm-12">
+          <div v-if="attributes.length">
+            <h2>Custom Attributes</h2>
+            <b-table striped :items="attributes"></b-table>
+          </div>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 

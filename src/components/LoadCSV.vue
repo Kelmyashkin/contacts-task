@@ -1,24 +1,41 @@
 <template>
   <div>
     <h1>Load a CSV file</h1>
-    <input ref="csv" type="file" name="csv" @change.prevent="loadfile" />
+    <b-form-file
+      class="w-50 my-3"
+      v-model="csvFile"
+      :state="Boolean(csvFile)"
+      placeholder="Choose a file or drop it here..."
+      drop-placeholder="Drop file here..."
+      accept=".csv"
+    ></b-form-file>
 
-    <ul v-if="columns.length">
-      <li v-for="field in mapFields" :key="field.key">
-        {{ field.key }}
-        <select v-model="field.mapPlace">
-          <option value=""></option>
-          <option
-            v-for="(column, index) in columns"
-            :key="index"
-            :value="index"
-            >{{ column }}</option
-          >
-        </select>
-      </li>
-    </ul>
+    <b-container class="my-3 ">
+      <b-row>
+        <b-col class="cols-2">
+          <b-list-group v-if="columns.length">
+            <b-list-group-item
+              v-for="field in mapFields"
+              :key="field.key"
+              class="d-flex align-items-baseline"
+            >
+              <span class="mr-4">{{ field.key }}</span>
+              <b-form-select
+                v-model="field.mapPlace"
+                :options="columnsOptions"
+              ></b-form-select>
+            </b-list-group-item>
+          </b-list-group>
+        </b-col>
+      </b-row>
+    </b-container>
 
-    <button :disabled="!allColumnsMapped" @click="loadContacts">Load</button>
+    <b-button
+      :disabled="!allColumnsMapped"
+      @click="loadContacts"
+      variant="outline-success"
+      >Load</b-button
+    >
   </div>
 </template>
 
@@ -49,17 +66,24 @@ export default class LoadCSV extends Vue {
   columns: string[] = [];
   rows: string[][] = [];
 
-  $refs!: {
-    csv: any;
-  };
+  get columnsOptions() {
+    return this.columns.map((c, index) => ({ text: c, value: index }));
+  }
 
   get allColumnsMapped() {
     return this.mapFields.every((f) => f.mapPlace !== undefined);
   }
 
-  loadfile() {
-    console.log("loadfile");
-    const file = this.$refs.csv?.files[0];
+  csvFile = null;
+
+  @Watch("csvFile")
+  onChange(value: any, oldValue: any) {
+    if (value) {
+      this.loadfile(value);
+    }
+  }
+
+  loadfile(file: any) {
     const mimeType = file.type === "" ? mimeTypes.lookup(file.name) : file.type;
 
     if (file) {
@@ -71,7 +95,8 @@ export default class LoadCSV extends Vue {
       ].includes(mimeType);
 
       if (!isValidFileMimeType) {
-        alert("Incorrect file, pleace load csv file");
+        alert("Incorrect file, please load CSV file");
+        Vue.nextTick(this.clearFileChoose);
         return;
       }
 
@@ -79,13 +104,6 @@ export default class LoadCSV extends Vue {
         const result = Papa.parse(output, { skipEmptyLines: true });
         this.columns = result.data[0] as string[];
         this.rows = result.data.slice(1) as string[][];
-
-        console.log(result);
-        // _this.sample = get(
-        //   Papa.parse(output, { preview: 2, skipEmptyLines: true }),
-        //   "data"
-        // );
-        // _this.csv = get(Papa.parse(output, { skipEmptyLines: true }), "data");
       });
     }
   }
@@ -137,7 +155,7 @@ export default class LoadCSV extends Vue {
   }
 
   clearFileChoose() {
-    if (this.$refs.csv) this.$refs.csv.value = "";
+    this.csvFile = null;
     this.rows = [];
     this.columns = [];
     this.mapFields.forEach((mf) => (mf.mapPlace = undefined));
